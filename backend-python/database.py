@@ -1,5 +1,16 @@
 import pymongo
+from datetime import datetime
 import sys
+
+
+class UserData:
+    def __init__(self) -> None:
+        self.access_tokens: dict[str, str] = {}
+        self.account_ids: dict[str, list[str]] = []
+        self.banks: list[str] = []
+        self.bank_ids: list[str] = []
+        self.bank_account_tokens: dict[str, dict[str, str]] = []
+        self.last_rounded: datetime = None
 
 
 class MyDB:

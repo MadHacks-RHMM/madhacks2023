@@ -2,21 +2,9 @@ from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from flask import jsonify
-from plaid.api import plaid_api
-from plaid.model.transactions_sync_request import TransactionsSyncRequest
-from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
-from plaid.model.link_token_create_request import LinkTokenCreateRequest
-from plaid.model.link_token_create_request_user import LinkTokenCreateRequestUser
-from plaid.model.products import Products
-from plaid.model.country_code import CountryCode
+from database import MyDB, UserData
+from plaidapi import PlaidData, LinkData
 import uvicorn
-import plaid
-import pymongo
-
-
-PLAID_CLIENT_ID = "6403cf9acca1db0012448611"
-PLAID_SECRET_ID_SANDBOX = "03f8cb25a85a0d46070aea16b08122"
-PLAID_SECRET_ID_DEVELOPMENT = "ce796b1f5343a3fce5c0c9b792260d"
 
 
 class ClientInfo:
@@ -75,37 +63,6 @@ def main():
     async def get_client_id(**kwargs):
         client_info.client_id = kwargs['client_id']
         return {'message': 'Client ID Received', 'client_id': client_info.client_id}
-
-    host = plaid.Environment.Sandbox
-
-    configuration = plaid.Configuration(
-        host=host,
-        api_key={
-            'clientId': PLAID_CLIENT_ID,
-            'secret': PLAID_SECRET_ID_SANDBOX,
-            'plaidVersion': '2020-09-14'
-        }
-    )
-
-    api_client = plaid.ApiClient(configuration)
-    client = plaid_api.PlaidApi(api_client)
-
-    @fastapp.post('/create_link_token')
-    async def create_link_token():
-        request = LinkTokenCreateRequest(
-            products=[Products("auth")],
-            client_name="Plaid Test App",
-            country_codes=[CountryCode('US')],
-            redirect_uri='https://domainname.com/oauth-page.html',
-            language='en',
-            webhook='https://webhook.example.com',
-            user=LinkTokenCreateRequestUser(
-                    client_user_id=client_info.client_id
-            )
-        )
-        response = client.link_token_create(request)
-
-        return jsonify(response.to_dict())
 
     uvicorn.run(fastapp, host='localhost')
 
