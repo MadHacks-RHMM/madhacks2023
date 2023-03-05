@@ -48,7 +48,7 @@ class MyDB:
 
             # use a database named "AppDB"
 
-        self.db = self.client.AppDB
+        self.db = self.client.AppDB['users']
 
     def get_user(self, email: str) -> UserData | None:
         return UserData(self.db.find({"email": email}))
