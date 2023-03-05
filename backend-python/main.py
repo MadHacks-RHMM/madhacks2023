@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from flask import jsonify
 from plaid.api import plaid_api
 from plaid.model.transactions_sync_request import TransactionsSyncRequest
@@ -22,11 +23,13 @@ class ClientInfo:
     client_id = ""
     access_token = ""
     item_id = ""
+    password = ""
 
-    def __init__(self, client_id="", access_token="", item_id=""):
+    def __init__(self, client_id="", access_token="", item_id="", password=""):
         self.client_id = client_id
         self.access_token = access_token
         self.item_id = item_id
+        self.password = password
 
 
 def main():
@@ -44,6 +47,29 @@ def main():
     @fastapp.get('/')
     async def root():
         return {'message': 'Fetch Connection Successful'}
+
+    @fastapp.get('/lg', response_class=HTMLResponse)
+    async def lg_get():
+        return " \
+    <html>\
+        <body>\
+            <p>Enter your ID and Password</p>\
+            <form action=\"/lg\" method=\"post\">\
+                <input type=\"text\" name=\"id\" />\
+                <input type=\"text\" name=\"password\" />\
+                <button type=\"submit\">Submit</button>\
+            </form>\
+        </body>\
+    </html>"""
+
+    @fastapp.post('/lg', response_class=HTMLResponse)
+    async def lg_post(id=Form(), password=Form()):
+        client_info.client_id = id
+        client_info.password = password
+        return (
+            f"""
+    {client_info.client_id} \n {client_info.password}
+    """)
 
     @fastapp.post('/get_client_id')
     async def get_client_id(**kwargs):
