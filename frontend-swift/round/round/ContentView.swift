@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var loginView: LoginView
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
