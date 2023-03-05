@@ -11,6 +11,8 @@ class UserData:
         self.bank_ids: list[str] = []
         self.bank_account_tokens: dict[str, dict[str, str]] = []
         self.last_rounded: datetime = None
+        self.name: str = ""
+        self.email: str = ""
 
 
 class MyDB:
@@ -28,6 +30,9 @@ class MyDB:
 
         self.db = self.client.AppDB
         print(self.db.name)
+
+    def get_user(self, email: str) -> UserData:
+        pass
 
 
 # MyDB()

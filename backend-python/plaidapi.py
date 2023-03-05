@@ -3,6 +3,7 @@ from plaid.model.transactions_sync_request import TransactionsSyncRequest
 from plaid.model.item_public_token_exchange_request import ItemPublicTokenExchangeRequest
 from plaid.model.processor_stripe_bank_account_token_create_request import ProcessorStripeBankAccountTokenCreateRequest
 from database import UserData
+from pydantic import BaseModel
 import plaid
 
 PLAID_CLIENT_ID = "6403cf9acca1db0012448611"
@@ -10,12 +11,13 @@ PLAID_SECRET_ID_SANDBOX = "03f8cb25a85a0d46070aea16b08122"
 PLAID_SECRET_ID_DEVELOPMENT = "ce796b1f5343a3fce5c0c9b792260d"
 
 
-class LinkData:
-    def __init__(self, public_token="", accounts="", institution="", linkSessionId="") -> None:
+class LinkData(BaseModel):
+    def __init__(self, public_token="", accounts="", institution="", linkSessionId="", email="") -> None:
         self.public_token = public_token
         self.accounts = accounts
         self.institution = institution
         self.linkSessionId = linkSessionId
+        self.email = email
 
 
 class PlaidData:
@@ -42,6 +44,7 @@ class PlaidData:
         exchange_response = self.client.item_public_token_exchange(
             exchange_request)
         user_data = UserData()
+        user_data.email = link_data.email
 
         access_token = exchange_response['access_token']
 
