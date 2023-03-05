@@ -14,6 +14,8 @@ class UserData:
         self.last_rounded: str = str(datetime(dt.MINYEAR, 1, 1))
         self.name: str = ""
         self.email: str = ""
+        self.total_donations: float = 0.0
+        self.current_goal_donations: float = 0.0
 
     def __iter__(self):
         for key in self.__dict__:
