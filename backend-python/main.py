@@ -45,9 +45,9 @@ def main():
         return {'message': 'Fetch Connection Successful'}
 
     @fastapp.post('/get_client_id')
-    async def get_client_id(client_id: str):
-        client_info.client_id = client_id
-        return {'message': 'Client ID Received'}
+    async def get_client_id(**kwargs):
+        client_info.client_id = kwargs['client_id']
+        return {'message': 'Client ID Received', 'client_id': client_info.client_id}
 
     host = plaid.Environment.Sandbox
 
