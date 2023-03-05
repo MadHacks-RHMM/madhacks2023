@@ -10,6 +10,7 @@ from plaid.model.products import Products
 from plaid.model.country_code import CountryCode
 import uvicorn
 import plaid
+import pymongo
 
 
 PLAID_CLIENT_ID = "6403cf9acca1db0012448611"
