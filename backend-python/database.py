@@ -56,6 +56,3 @@ class MyDB:
     def set_user(self, user: UserData) -> None:
         return None if self.db.update_one({"email": user.email}, {
             "$set": dict(user)}, upsert=True) else None
-
-
-print(MyDB().db.list_collection_names())
