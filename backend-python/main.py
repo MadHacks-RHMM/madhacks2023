@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import MyDB, UserData
 from plaidapi import PlaidData, LinkData
+from plaid.model.products import Products
+from plaid.model.country_code import CountryCode
 import uvicorn
 
 
@@ -98,6 +100,22 @@ def main():
         fastapp.user = user
 
         return {'message': 'Link Success Data Received', 'client_id': link_data.accounts['id']}
+
+    @fastapp.app.post('/create_link_token')
+    async def create_link_token():
+        configs = {
+            "user": {
+                "client_user_id": 'user-id'
+            },
+            "client_name": "Plaid Quickstart",
+            "products": [Products("auth"), Products("transactions")],
+            "country_codes": [CountryCode("US")],
+            "language": "en",
+            "redirect_uri": "",
+            "android_package_name": "",
+        }
+        response = plaid.client.link_token_create(configs)
+        return response['data']
 
     uvicorn.run(fastapp.app, host='localhost')
 
