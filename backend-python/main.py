@@ -33,6 +33,7 @@ def main():
 
     @fastapp.app.post('/login')
     async def login(email: str = "", name: str = ""):
+        print("DEBUG")
         user = database.get_user(email)
         user = UserData() if user is None else user
         user.email = email
